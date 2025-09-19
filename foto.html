@@ -2,19 +2,84 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Presença com Foto</title>
+  <title>Registro de Presença</title>
   <style>
-    body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-    video, canvas, img { border: 2px solid #333; margin: 10px 0; max-width: 90%; }
-    button { padding: 10px 20px; font-size: 16px; margin: 5px; }
+    /* Reset básico */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* centraliza verticalmente */
+      align-items: center;     /* centraliza horizontalmente */
+      background: linear-gradient(135deg, #8efc09, #65b307, #0477f1, #1e5ca9);    height: 100vh;
+      text-align: center;
+    }
+    
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    video, canvas, img {
+      border: 2px solid #333;
+      border-radius: 10px;
+      max-width: 90%;
+      margin-bottom: 15px;
+      background: #000;
+    }
+
+    .botoes {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      background: blue;
+      color: white;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #ff4757;
+    }
+
+    #fotoTirada {
+      display: none;
+      border: 2px solid #333;
+      border-radius: 10px;
+      max-width: 90%;
+      margin-bottom: 20px;
+    }
+    img {
+        position: absolute;
+        top: 50px;
+        right: 50px;
+        max-width: 400px;
+        background: transparent;
+    }   
   </style>
 </head>
 <body>
+    <img src="logo.png" alt="logo">
   <h2>Registro de Presença</h2>
-  <video id="video" autoplay></video>
+
+  <video id="video" autoplay playsinline></video>
   <canvas id="canvas" style="display:none;"></canvas>
-  <img id="fotoTirada" style="display:none;" alt="Foto do aluno">
-  <div>
+  <img id="fotoTirada" alt="Foto do aluno">
+
+  <div class="botoes">
     <button id="btnFoto">Tirar Foto</button>
     <button id="btnSalvar" style="display:none;">Salvar Foto</button>
   </div>
@@ -26,25 +91,21 @@
     const btnFoto = document.getElementById('btnFoto');
     const btnSalvar = document.getElementById('btnSalvar');
 
-    // Abrir a câmera
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => { video.srcObject = stream; })
       .catch(err => { alert('Erro ao acessar a câmera: ' + err); console.log(err); });
 
-    // Tirar foto
     btnFoto.addEventListener('click', () => {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       canvas.getContext('2d').drawImage(video, 0, 0);
 
-      // Mostrar a foto tirada
       const dataURL = canvas.toDataURL('image/png');
       fotoTirada.src = dataURL;
       fotoTirada.style.display = 'block';
       btnSalvar.style.display = 'inline';
     });
 
-    // Salvar foto
     btnSalvar.addEventListener('click', () => {
       const link = document.createElement('a');
       link.href = fotoTirada.src;
