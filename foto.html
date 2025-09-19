@@ -12,21 +12,26 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start; /* topo começa mais alto para a logo */
       align-items: center;
       background: linear-gradient(135deg, #8efc09, #65b307, #0477f1, #1e5ca9);
       text-align: center;
+      padding-top: 30px; /* espaço extra pro topo */
     }
 
+    /* Logo centralizada e maior */
     .logo {
       position: absolute;
-      top: 5%;
-      max-width: 150px;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 200px;
       height: auto;
       z-index: 10;
     }
 
     h2 {
+      margin-top: 240px; /* empurra título pra baixo da logo */
       margin-bottom: 20px;
       color: #fff;
     }
@@ -53,6 +58,8 @@
     }
 
     .botoes {
+      position: relative; /* z-index funciona */
+      z-index: 20;
       display: flex;
       justify-content: center;
       gap: 15px;
@@ -79,7 +86,7 @@
 </head>
 <body>
   
-  <!-- Logo responsiva no topo direito -->
+  <!-- Logo centralizada -->
   <img src="logo.png" alt="Logo" class="logo">
 
   <h2>Registro de Presença</h2>
