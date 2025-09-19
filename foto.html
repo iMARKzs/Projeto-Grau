@@ -14,7 +14,7 @@
       flex-direction: column;
       justify-content: center; /* centraliza verticalmente */
       align-items: center;     /* centraliza horizontalmente */
-      background: linear-gradient(135deg, #8efc09, #65b307, #0477f1, #1e5ca9);    height: 100vh;
+      background: linear-gradient(135deg, #8efc09, #65b307, #0477f1, #1e5ca9);
       text-align: center;
     }
     
@@ -62,6 +62,7 @@
       max-width: 90%;
       margin-bottom: 20px;
     }
+
     img {
         position: absolute;
         top: 50px;
@@ -72,45 +73,53 @@
 </head>
 <body>
     <img src="logo.png" alt="logo">
-  <h2>Registro de Presença</h2>
+    <h2>Registro de Presença</h2>
 
-  <video id="video" autoplay playsinline></video>
-  <canvas id="canvas" style="display:none;"></canvas>
-  <img id="fotoTirada" alt="Foto do aluno">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <img id="fotoTirada" alt="Foto do aluno">
 
-  <div class="botoes">
-    <button id="btnFoto">Tirar Foto</button>
-    <button id="btnSalvar" style="display:none;">Salvar Foto</button>
-  </div>
+    <div class="botoes">
+        <button id="btnFoto">Tirar Foto</button>
+        <button id="btnSalvar" style="display:none;">Salvar Foto</button>
+    </div>
 
-  <script>
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const fotoTirada = document.getElementById('fotoTirada');
-    const btnFoto = document.getElementById('btnFoto');
-    const btnSalvar = document.getElementById('btnSalvar');
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const fotoTirada = document.getElementById('fotoTirada');
+        const btnFoto = document.getElementById('btnFoto');
+        const btnSalvar = document.getElementById('btnSalvar');
 
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => { video.srcObject = stream; })
-      .catch(err => { alert('Erro ao acessar a câmera: ' + err); console.log(err); });
+        // Acessar a câmera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => { video.srcObject = stream; })
+            .catch(err => { alert('Erro ao acessar a câmera: ' + err); console.log(err); });
 
-    btnFoto.addEventListener('click', () => {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      canvas.getContext('2d').drawImage(video, 0, 0);
+        // Tirar foto
+        btnFoto.addEventListener('click', () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
 
-      const dataURL = canvas.toDataURL('image/png');
-      fotoTirada.src = dataURL;
-      fotoTirada.style.display = 'block';
-      btnSalvar.style.display = 'inline';
-    });
+            const dataURL = canvas.toDataURL('image/png');
+            fotoTirada.src = dataURL;
 
-    btnSalvar.addEventListener('click', () => {
-      const link = document.createElement('a');
-      link.href = fotoTirada.src;
-      link.download = 'foto_aluno.png';
-      link.click();
-    });
-  </script>
+            // Mostrar a foto e esconder o vídeo
+            fotoTirada.style.display = 'block';
+            video.style.display = 'none';
+
+            // Mostrar botão de salvar
+            btnSalvar.style.display = 'inline';
+        });
+
+        // Salvar foto
+        btnSalvar.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.href = fotoTirada.src;
+            link.download = 'foto_aluno.png';
+            link.click();
+        });
+    </script>
 </body>
 </html>
