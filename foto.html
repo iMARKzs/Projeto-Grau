@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Registro de Presença</title>
   <style>
-    /* Reset básico */
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -12,23 +11,44 @@
       height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center; /* centraliza verticalmente */
-      align-items: center;     /* centraliza horizontalmente */
+      justify-content: center;
+      align-items: center;
       background: linear-gradient(135deg, #8efc09, #65b307, #0477f1, #1e5ca9);
       text-align: center;
     }
-    
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
+
+    .logo {
+      position: absolute;
+      top: 50px;
+      right: 10px;
+      max-width: 120px;
+      height: auto;
     }
 
-    video, canvas, img {
-      border: 2px solid #333;
+    h2 {
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    #cameraContainer {
+      position: relative;
+      width: 90%;
+      max-width: 400px;
+      margin-bottom: 20px;
+    }
+
+    video, #fotoTirada {
+      width: 100%;
       border-radius: 10px;
-      max-width: 90%;
-      margin-bottom: 15px;
+      border: 2px solid #333;
       background: #000;
+    }
+
+    #fotoTirada {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     .botoes {
@@ -54,72 +74,58 @@
     button:hover {
       background: #ff4757;
     }
-
-    #fotoTirada {
-      display: none;
-      border: 2px solid #333;
-      border-radius: 10px;
-      max-width: 90%;
-      margin-bottom: 20px;
-    }
-
-    img {
-        position: absolute;
-        top: 50px;
-        max-width: 400px;
-        background: transparent;
-    }   
   </style>
 </head>
 <body>
-    <img src="logo.png" alt="logo">
-    <h2>Registro de Presença</h2>
+  <!-- Logo no topo direito -->
+  <img src="logo.png" alt="Logo" class="logo">
 
+  <h2>Registro de Presença</h2>
+
+  <!-- Container do vídeo e foto -->
+  <div id="cameraContainer">
     <video id="video" autoplay playsinline></video>
-    <canvas id="canvas" style="display:none;"></canvas>
     <img id="fotoTirada" alt="Foto do aluno">
+  </div>
 
-    <div class="botoes">
-        <button id="btnFoto">Tirar Foto</button>
-        <button id="btnSalvar" style="display:none;">Salvar Foto</button>
-    </div>
+  <!-- Botões -->
+  <div class="botoes">
+    <button id="btnFoto">Tirar Foto</button>
+    <button id="btnSalvar" style="display:none;">Salvar Foto</button>
+  </div>
 
-    <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const fotoTirada = document.getElementById('fotoTirada');
-        const btnFoto = document.getElementById('btnFoto');
-        const btnSalvar = document.getElementById('btnSalvar');
+  <!-- Script -->
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.createElement('canvas');
+    const fotoTirada = document.getElementById('fotoTirada');
+    const btnFoto = document.getElementById('btnFoto');
+    const btnSalvar = document.getElementById('btnSalvar');
 
-        // Acessar a câmera
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => { video.srcObject = stream; })
-            .catch(err => { alert('Erro ao acessar a câmera: ' + err); console.log(err); });
+    // Acessar câmera
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => { video.srcObject = stream; })
+      .catch(err => { alert('Erro ao acessar a câmera: ' + err); console.log(err); });
 
-        // Tirar foto
-        btnFoto.addEventListener('click', () => {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
+    // Tirar foto
+    btnFoto.addEventListener('click', () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
 
-            const dataURL = canvas.toDataURL('image/png');
-            fotoTirada.src = dataURL;
+      const dataURL = canvas.toDataURL('image/png');
+      fotoTirada.src = dataURL;
+      fotoTirada.style.display = 'block';
+      btnSalvar.style.display = 'inline';
+    });
 
-            // Mostrar a foto e esconder o vídeo
-            fotoTirada.style.display = 'block';
-            video.style.display = 'none';
-
-            // Mostrar botão de salvar
-            btnSalvar.style.display = 'inline';
-        });
-
-        // Salvar foto
-        btnSalvar.addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.href = fotoTirada.src;
-            link.download = 'foto_aluno.png';
-            link.click();
-        });
-    </script>
+    // Salvar foto
+    btnSalvar.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.href = fotoTirada.src;
+      link.download = 'foto_aluno.png';
+      link.click();
+    });
+  </script>
 </body>
 </html>
