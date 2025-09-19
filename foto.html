@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Presença com Foto</title>
+  <style>
+    body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+    video, canvas, img { border: 2px solid #333; margin: 10px 0; max-width: 90%; }
+    button { padding: 10px 20px; font-size: 16px; margin: 5px; }
+  </style>
+</head>
+<body>
+  <h2>Registro de Presença</h2>
+  <video id="video" autoplay></video>
+  <canvas id="canvas" style="display:none;"></canvas>
+  <img id="fotoTirada" style="display:none;" alt="Foto do aluno">
+  <div>
+    <button id="btnFoto">Tirar Foto</button>
+    <button id="btnSalvar" style="display:none;">Salvar Foto</button>
+  </div>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const fotoTirada = document.getElementById('fotoTirada');
+    const btnFoto = document.getElementById('btnFoto');
+    const btnSalvar = document.getElementById('btnSalvar');
+
+    // Abrir a câmera
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => { video.srcObject = stream; })
+      .catch(err => { alert('Erro ao acessar a câmera: ' + err); console.log(err); });
+
+    // Tirar foto
+    btnFoto.addEventListener('click', () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+
+      // Mostrar a foto tirada
+      const dataURL = canvas.toDataURL('image/png');
+      fotoTirada.src = dataURL;
+      fotoTirada.style.display = 'block';
+      btnSalvar.style.display = 'inline';
+    });
+
+    // Salvar foto
+    btnSalvar.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.href = fotoTirada.src;
+      link.download = 'foto_aluno.png';
+      link.click();
+    });
+  </script>
+</body>
+</html>
