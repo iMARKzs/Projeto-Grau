@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Localização</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="icon.jpg">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+    <img src="logo.png" alt="">
+    <h1>MARCAÇÃO DE PRESENÇA</h1>
+    <br><br>
+    <div class="container">
+        <div class="coordenadas">
+            <div class="input-grupo">
+                <label for="lat"><b>LAT</b></label>
+                <input type="text" id="lat" readonly>
+            </div>
+            <div class="input-grupo">
+                <label for="lng"><b>LNG</b></label>
+                <input type="text" id="lng" readonly>
+            </div>
+        </div>
+        <div class="minimapa">
+            <div id="leaflet-map"></div>
+        </div>
+        <div class="botao">
+            <p style="font-family: arial;">
+                Clique aqui.
+            </p>
+        </div>
+    </div>
+  <footer class="footer">
+    2025 &copy; Grau Checking - Todos os direitos reservados
+  </footer>
+  
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+    const botao = document.querySelector('.botao');
+    const latInput = document.getElementById('lat');
+    const lngInput = document.getElementById('lng');
+
+    let mapa;
+    const refLat = -7.2269;
+    const refLng = -35.8850;
+    const raioLimite = 30;
+
+    function inicializarMapa(latitude, longitude) {
+        if (mapa) {
+            mapa.remove();
+        }
+        mapa = L.map('leaflet-map').setView([latitude, longitude], 25);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(mapa);
+        
+        L.marker([latitude, longitude]).addTo(mapa)
+            .bindPopup('Sua localização')
+            .openPopup();
+            
+        L.marker([refLat, refLng]).addTo(mapa)
+            .bindPopup('Localização da Grau Tecnico.')
+            .openPopup();
+    }
+    
+    function toRad(value) {
+        return value * Math.PI / 180;
+    }
+
+    function calcularDistancia(lat1, lon1, lat2, lon2) {
+        const R = 6371e3;
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distancia = R * c;
+        return distancia;
+    }
+    
+    function mostrarSucesso() {
+        document.querySelector('.container').style.backgroundColor = 'lightgreen';
+        setTimeout(() => {
+            document.querySelector('.container').style.backgroundColor = 'transparent';
+        }, 1500);
+    }
+
+    function mostrarErro() {
+        document.querySelector('.container').style.backgroundColor = 'transparent';
+        setTimeout(() => {
+            document.querySelector('.container').style.backgroundColor = 'transparent';
+        }, 1500);
+    }
+
+    botao.addEventListener('click', () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (posicao) => {
+                    const latitude = posicao.coords.latitude;
+                    const longitude = posicao.coords.longitude;
+                    
+                    latInput.value = latitude;
+                    lngInput.value = longitude;
+
+                    const distancia = calcularDistancia(latitude, longitude, refLat, refLng);
+                    
+                    if (distancia <= raioLimite) {
+                        alert("Presença marcada com sucesso!");
+                        mostrarSucesso();
+                    } else {
+                        alert("Você está fora da área permitida. Sua distância é de " + distancia.toFixed(0) + " metros da instituição.");
+                        mostrarErro();
+                    }
+                    
+                    inicializarMapa(latitude, longitude);
+                },
+                (erro) => {
+                    latInput.value = "Erro!";
+                    lngInput.value = "Erro!";
+                    alert("Erro ao obter a localização. Verifique as permissões.");
+                }
+            );
+        } else {
+            latInput.value = "Não suporta.";
+            lngInput.value = "Não suporta.";
+            alert("Seu navegador não suporta geolocalização.");
+        }
+    });
+</script>
+</body>
+</html>
