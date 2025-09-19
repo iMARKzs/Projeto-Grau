@@ -70,19 +70,25 @@
       color: white;
       font-weight: bold;
     }
-
+    
+    img {
+        position: absolute;
+        top: 50px;
+        background: transparent;
+        max-width: 400px;
+    }
     button:hover {
       background: #ff4757;
     }
   </style>
 </head>
 <body>
-  <!-- Logo no topo direito -->
-  <img src="logo.png" alt="Logo" class="logo">
+  
+  <img src="logo.png" alt="logo">
 
   <h2>Registro de Presença</h2>
 
-  <!-- Container do vídeo e foto -->
+  <!-- vídeo e foto -->
   <div id="cameraContainer">
     <video id="video" autoplay playsinline></video>
     <img id="fotoTirada" alt="Foto do aluno">
