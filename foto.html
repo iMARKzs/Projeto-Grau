@@ -3,35 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <title>Registro de Presença</title>
-  <link rel="icon" type="image/png" href="icon.jpg">
+  <link rel=icon type="image/png" href="icon.jpg">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: Arial, sans-serif;
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start; /* topo começa mais alto para a logo */
+      justify-content: center;
       align-items: center;
       background: linear-gradient(135deg, #8efc09, #65b307, #0477f1, #1e5ca9);
       text-align: center;
-      padding-top: 30px; /* espaço extra pro topo */
     }
 
-    /* Logo centralizada e maior */
     .logo {
       position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      max-width: 200px;
+      top: 50px;
+      right: 10px;
+      max-width: 120px;
       height: auto;
-      z-index: 10;
     }
 
     h2 {
-      margin-top: 240px; /* empurra título pra baixo da logo */
       margin-bottom: 20px;
       color: #fff;
     }
@@ -58,8 +53,6 @@
     }
 
     .botoes {
-      position: relative; /* z-index funciona */
-      z-index: 20;
       display: flex;
       justify-content: center;
       gap: 15px;
@@ -78,7 +71,13 @@
       color: white;
       font-weight: bold;
     }
-
+    
+    img {
+        position: absolute;
+        top: 5%;
+        background: transparent;
+        max-width: 100%;
+    }
     button:hover {
       background: #ff4757;
     }
@@ -86,12 +85,11 @@
 </head>
 <body>
   
-  <!-- Logo centralizada -->
-  <img src="logo.png" alt="Logo" class="logo">
+  <img src="logo.png" alt="logo">
 
   <h2>Registro de Presença</h2>
 
-  <!-- Container do vídeo e da foto -->
+  <!-- vídeo e foto -->
   <div id="cameraContainer">
     <video id="video" autoplay playsinline></video>
     <img id="fotoTirada" alt="Foto do aluno">
@@ -124,11 +122,7 @@
 
       const dataURL = canvas.toDataURL('image/png');
       fotoTirada.src = dataURL;
-
-      // Mostrar a foto sobre o vídeo
       fotoTirada.style.display = 'block';
-
-      // Mostrar botão de salvar
       btnSalvar.style.display = 'inline';
     });
 
